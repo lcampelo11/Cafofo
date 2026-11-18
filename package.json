@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "node --check server.js && node --check app.js && node --check data.js && node --check sw.js",
-    "lint": "node --check server.js && node --check app.js && node --check data.js && node --check sw.js"
+    "build": "node --check server.js && node --check app.js && node --check data.js && node --check tatico.js && node --check sw.js",
+    "lint": "node --check server.js && node --check app.js && node --check data.js && node --check tatico.js && node --check sw.js"
   },
   "dependencies": {
     "express": "^5.3.0"

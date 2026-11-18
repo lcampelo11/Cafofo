@@ -884,5 +884,86 @@ window.CAFOFO = {
         }
       ]
     }
+  ],
+
+  quotaEcosystems: [
+    {
+      id: "google",
+      label: "Google AI Studio",
+      defaultReset: "20:00",
+      guide: "No menu lateral esquerdo do AI Studio acesse Dashboard > Usage & Billing."
+    },
+    {
+      id: "anthropic",
+      label: "Anthropic / Claude",
+      defaultReset: "20:00",
+      guide: "No Claude Code digite `/cost` ou `/context`. No site/app acesse Perfil > Configurações > Uso."
+    },
+    {
+      id: "openai",
+      label: "OpenAI / ChatGPT",
+      defaultReset: "20:00",
+      guide: "No Codex digite `/status` para ver o percentual restante e o horário de reset."
+    },
+    {
+      id: "microsoft",
+      label: "Microsoft Copilot",
+      defaultReset: "20:00",
+      guide: "Controle estimado pelos botões de peso abaixo."
+    }
+  ],
+
+  tacticalManual: [
+    // Anthropic / Claude
+    { eco: "Anthropic / Claude", cmd: "/compact", desc: "Resume o histórico inteiro da sessão para liberar memória e economizar milhares de tokens" },
+    { eco: "Anthropic / Claude", cmd: "/cost", desc: "Mostra o gasto exato de tokens da sessão atual" },
+    { eco: "Anthropic / Claude", cmd: "/context", desc: "Exibe visualmente o que está ocupando a janela de contexto" },
+    { eco: "Anthropic / Claude", cmd: "/clear", desc: "Zera o histórico ao mudar de assunto" },
+    { eco: "Anthropic / Claude", cmd: "/init", desc: "Cria o arquivo CLAUDE.md com regras do projeto" },
+    { eco: "Anthropic / Claude", cmd: "/plan", desc: "Obriga a mostrar o plano passo a passo antes de editar arquivos" },
+    { eco: "Anthropic / Claude", cmd: "/review", desc: "Auditoria completa de bugs e qualidade" },
+    { eco: "Anthropic / Claude", cmd: "/security-review", desc: "Busca falhas de segurança e chaves expostas" },
+    { eco: "Anthropic / Claude", cmd: "/effort low", desc: "Reduz esforço de raciocínio para economizar cota" },
+    { eco: "Anthropic / Claude", cmd: "/model", desc: "Alterna entre Haiku, Sonnet e Opus" },
+    { eco: "Anthropic / Claude", cmd: "/resume", desc: "Retoma sessão anterior" },
+    { eco: "Anthropic / Claude", cmd: "/undo", desc: "Desfaz a última alteração nos arquivos" },
+    { eco: "Anthropic / Claude", cmd: "/memory", desc: "Edita memórias fixas do projeto" },
+    { eco: "Anthropic / Claude", cmd: "/btw", desc: "Pergunta rápida paralela sem poluir o histórico" },
+    { eco: "Anthropic / Claude", cmd: "/export", desc: "Exporta conversa em Markdown" },
+
+    // OpenAI / ChatGPT
+    { eco: "OpenAI / ChatGPT", cmd: "/status", desc: "Mostra uso atual da sessão, limites restantes e modelo no Codex" },
+    { eco: "OpenAI / ChatGPT", cmd: "/compact", desc: "Compacta histórico longo no Codex" },
+    { eco: "OpenAI / ChatGPT", cmd: "/diff", desc: "Mostra alterações de código antes de aprovar" },
+    { eco: "OpenAI / ChatGPT", cmd: "/review", desc: "Revisão técnica de mudanças" },
+    { eco: "OpenAI / ChatGPT", cmd: "/plan", desc: "Modo de planejamento antes da execução" },
+    { eco: "OpenAI / ChatGPT", cmd: "/model", desc: "Troca modelo ou nível de raciocínio" },
+    { eco: "OpenAI / ChatGPT", cmd: "/clear", desc: "Limpa contexto atual" },
+    { eco: "OpenAI / ChatGPT", cmd: "/canvas", desc: "Abre editor lateral interativo" },
+    { eco: "OpenAI / ChatGPT", cmd: "/search", desc: "Força pesquisa web com fontes" },
+    { eco: "OpenAI / ChatGPT", cmd: "/deep-research", desc: "Inicia relatório de pesquisa profunda" },
+
+    // Google / AI Studio
+    { eco: "Google / AI Studio", cmd: "@Google Drive", desc: "Puxa arquivos do Drive direto no prompt" },
+    { eco: "Google / AI Studio", cmd: "@Gmail", desc: "Busca e resume e-mails no prompt" },
+    { eco: "Google / AI Studio", cmd: "System Instructions", desc: "Fixa regras permanentes no AI Studio sem repetir a cada mensagem" },
+    { eco: "Google / AI Studio", cmd: "Trocar para modelo Flash", desc: "Multiplica a cota diária por mais de 10x em ajustes simples" },
+    { eco: "Google / AI Studio", cmd: "Checkpoint / Restore", desc: "Restaura o código antes de um erro sem gastar novos tokens" },
+
+    // Microsoft / Copilot
+    { eco: "Microsoft / Copilot", cmd: "@workspace", desc: "Lê toda a estrutura do repositório de uma vez" },
+    { eco: "Microsoft / Copilot", cmd: "@terminal", desc: "Analisa erros direto do terminal" },
+    { eco: "Microsoft / Copilot", cmd: "/fix", desc: "Corrige bugs automaticamente" },
+    { eco: "Microsoft / Copilot", cmd: "/explain", desc: "Explica códigos complexos linha por linha" },
+    { eco: "Microsoft / Copilot", cmd: "/tests", desc: "Gera testes automatizados" },
+    { eco: "Microsoft / Copilot", cmd: "/optimize", desc: "Melhora performance do código" },
+    { eco: "Microsoft / Copilot", cmd: "/doc", desc: "Gera documentação técnica" },
+    { eco: "Microsoft / Copilot", cmd: "/clear", desc: "Limpa histórico do chat" },
+
+    // Meta AI
+    { eco: "Meta AI", cmd: "/imagine", desc: "Gera imagens instantâneas no chat" },
+    { eco: "Meta AI", cmd: "Animate", desc: "Transforma imagem parada em animação" },
+    { eco: "Meta AI", cmd: "@Meta AI", desc: "Chama o assistente dentro de conversas no WhatsApp/Messenger" }
   ]
 };
+

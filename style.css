@@ -150,3 +150,112 @@ header.simples{flex-direction:row;justify-content:flex-start;gap:12px}
 .modal-alert{position:fixed;left:50%;top:50%;z-index:85;width:min(440px,92vw);background:#0c0c10;border:1px solid rgba(251,191,36,.45);border-radius:18px;padding:18px;box-shadow:0 16px 48px rgba(0,0,0,.85);display:flex;flex-direction:column;gap:14px;transform:translate(-50%,-46%) scale(.95);opacity:0;pointer-events:none;transition:transform .2s ease,opacity .2s ease}
 .modal-alert.aberto{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
 .modal-alert-msg{font-size:14px;line-height:1.5;color:#e4e4e7}
+
+/* Central Tatica / Gaveta Direita */
+.menu-btn-dir{left:auto;right:16px}
+.drawer-dir{left:auto;right:0;width:min(440px,95vw);border-right:0;border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.78);transform:translateX(100%);padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+.drawer-dir.aberto{transform:translateX(0)}
+
+.tatico-topo{gap:10px;margin-bottom:10px}
+.tatico-titulo-wrap{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tatico-topo-acoes{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.api-status{display:inline-flex;align-items:center;gap:5px;width:fit-content;font:700 9px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:8px;border:1px solid var(--line)}
+.api-status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.api-status.ativa{color:#34d399;border-color:rgba(52,211,153,.4);background:rgba(16,185,129,.12)}
+.api-status.sem-chave{color:#fbbf24;border-color:rgba(251,191,36,.35);background:rgba(245,158,11,.1)}
+
+.api-panel{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px}
+.api-hint{font-size:11.5px;color:var(--muted);line-height:1.4}
+.api-hint code{font-family:var(--mono);color:#e4e4e7;background:rgba(255,255,255,.08);padding:1px 4px;border-radius:4px}
+.api-row{display:flex;gap:6px;align-items:center}
+.api-row input,.manual-busca,.tatico-select,.quota-manual-row input[type=number],.quota-time-row input[type=time]{background:#050507;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:9px 11px;font:13px var(--mono);outline:none}
+.api-row input{flex:1;min-width:0}
+.api-row input:focus,.manual-busca:focus,.tatico-select:focus,.quota-manual-row input[type=number]:focus,.quota-time-row input[type=time]:focus{border-color:var(--red)}
+.api-acoes{display:flex;gap:8px}
+.tatico-mini-btn{background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:6px 10px;font:700 10px var(--mono);letter-spacing:.04em;cursor:pointer;flex-shrink:0}
+.tatico-mini-btn:hover{border-color:var(--red)}
+.tatico-mini-btn.ok{border-color:rgba(52,211,153,.6);color:#6ee7b7;background:rgba(16,185,129,.15)}
+.tatico-btn-sm{padding:9px 12px;font-size:11px;flex:1}
+.tatico-btn-xs{padding:6px 10px;font-size:10px}
+.tatico-btn-full{width:100%;padding:11px 14px;font-size:12px}
+.tatico-feedback{font-size:11.5px;color:#ff8089;min-height:14px;line-height:1.35}
+.tatico-feedback.ok{color:#6ee7b7}
+
+.tatico-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px;flex-shrink:0}
+.tatico-tab{background:transparent;border:0;border-radius:9px;color:var(--muted);padding:8px 6px;font:700 11px var(--mono);letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:background .16s ease,color .16s ease}
+.tatico-tab.ativo{background:var(--red);color:#fff;box-shadow:0 0 12px rgba(255,36,51,.35)}
+
+.tatico-corpo{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.tatico-painel{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px}
+
+/* Aba 1: Caderninho */
+.notas-lista{flex:1;min-height:130px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;padding:2px 2px 6px}
+.notas-vazio{margin:auto;text-align:center;font-size:13px;color:var(--muted);line-height:1.5;padding:18px 10px}
+.nota-balao{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px 14px 4px 14px;padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.nota-balao-topo{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nota-hora{font:700 10px var(--mono);color:var(--muted)}
+.nota-del{background:transparent;border:0;color:var(--muted);font-size:15px;line-height:1;cursor:pointer;padding:0 3px}
+.nota-del:hover{color:#ff6b75}
+.nota-txt{font-size:13.5px;line-height:1.45;color:var(--text);white-space:pre-wrap;word-break:break-word}
+
+.ia-resposta-box{background:rgba(16,185,129,.08);border:1px solid rgba(52,211,153,.35);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto}
+.ia-resposta-topo{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ia-resposta-topo span{font:800 10px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:#6ee7b7}
+.ia-resposta-topo i{font-style:normal;color:var(--red)}
+.ia-resposta-texto{font-size:12.5px;line-height:1.5;color:#e4e4e7;white-space:pre-wrap;word-break:break-word}
+
+.notas-composer{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px;flex-shrink:0}
+.notas-input-row{display:flex;align-items:flex-end;gap:6px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:6px 8px}
+.notas-input-row textarea{border:0;padding:4px 2px;font-size:14px;max-height:90px}
+.voz-btn,.add-nota-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.voz-btn{background:rgba(255,255,255,.06);color:var(--text)}
+.voz-btn.gravando{background:rgba(255,36,51,.22);border-color:var(--red);color:#ff8089;animation:pulsoVoz 1.1s infinite}
+@keyframes pulsoVoz{0%,100%{box-shadow:0 0 0 0 rgba(255,36,51,.45)}50%{box-shadow:0 0 0 6px rgba(255,36,51,0)}}
+.add-nota-btn{background:var(--red);border-color:var(--red);color:#fff;font:800 18px var(--mono)}
+.notas-acoes{display:flex;flex-direction:column;gap:8px}
+.notas-limpar-wrap{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.confirm-box{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#fde68a;flex-wrap:wrap}
+
+/* Aba 2: Cotas */
+.quota-field{display:flex;flex-direction:column;gap:6px}
+.quota-field label,.quota-sublabel{font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#cfcfd6}
+.tatico-select{width:100%;font-family:system-ui,sans-serif;font-weight:600}
+.quota-card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.quota-nums{display:flex;justify-content:space-between;align-items:flex-end}
+.quota-nums small{display:block;font:700 9px var(--mono);letter-spacing:.08em;color:var(--muted)}
+.quota-nums strong{font:800 22px var(--mono);color:var(--text)}
+.quota-right{text-align:right}
+.quota-track{width:100%;height:12px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.quota-fill{height:100%;border-radius:999px;transition:width .25s ease,background-color .25s ease}
+.quota-fill.verde{background:#10b981;box-shadow:0 0 12px rgba(16,185,129,.45)}
+.quota-fill.amarelo{background:#f59e0b;box-shadow:0 0 12px rgba(245,158,11,.45)}
+.quota-fill.vermelho{background:#ff2433;box-shadow:0 0 12px rgba(255,36,51,.55)}
+.quota-reset-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.quota-countdown{font:700 12px var(--mono);color:#e4e4e7}
+
+.como-checar{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03);overflow:hidden}
+.como-checar-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:transparent;border:0;color:var(--text);font:600 12.5px system-ui,sans-serif;cursor:pointer;text-align:left}
+.como-checar-body{padding:0 12px 11px;font-size:12.5px;line-height:1.45;color:#d4d4d8;border-top:1px solid rgba(255,255,255,.07);padding-top:9px}
+.como-checar-body code{font-family:var(--mono);color:#fde68a;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px}
+
+.quota-sec{display:flex;flex-direction:column;gap:7px}
+.quota-upload{cursor:pointer}
+.quota-pesos{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.quota-manual-row{display:flex;align-items:center;gap:8px}
+.quota-manual-row input[type=range]{flex:1;accent-color:var(--red)}
+.quota-manual-row input[type=number]{width:66px;text-align:center;padding:7px 6px}
+.quota-pct{font:700 12px var(--mono);color:var(--muted)}
+.quota-time-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted)}
+
+/* Aba 3: Manual Tatico */
+.manual-busca{width:100%;font-family:system-ui,sans-serif}
+.manual-filtros{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;flex-shrink:0}
+.manual-filtro{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cfcfd6;border-radius:16px;padding:6px 10px;font:700 10px var(--mono);white-space:nowrap;cursor:pointer}
+.manual-filtro.ativo{border-color:var(--red);background:rgba(255,36,51,.16);color:#fff}
+.manual-lista{display:flex;flex-direction:column;gap:8px;overflow-y:auto;flex:1}
+.manual-card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:11px 12px;display:flex;flex-direction:column;gap:6px}
+.manual-card-topo{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.manual-eco-tag{font:700 9.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#9a9aa2}
+.manual-cmd{display:inline-block;width:fit-content;font:700 13px var(--mono);color:#ff8089;background:rgba(255,36,51,.1);border:1px solid rgba(255,36,51,.28);border-radius:8px;padding:3px 8px}
+.manual-desc{font-size:12.5px;line-height:1.4;color:#d4d4d8}
+

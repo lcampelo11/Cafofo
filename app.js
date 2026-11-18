@@ -155,6 +155,17 @@
     $("modalDesktop").setAttribute("aria-hidden", "true");
   }
 
+  function avisarAbertura(origem) {
+    document.dispatchEvent(new CustomEvent("cafofo:fechar-overlays", { detail: { source: origem } }));
+  }
+
+  document.addEventListener("cafofo:fechar-overlays", function (e) {
+    if (e.detail && e.detail.source === "tatico") {
+      fecharMenu();
+      fecharModais();
+    }
+  });
+
   function abrirModalFicha(it) {
     var eco = getEcoAtivo();
     var detalhes = it.details || {};
@@ -462,6 +473,7 @@
   }
 
   function abrirMenu() {
+    avisarAbertura("menu");
     fecharModais();
     $("drawer").classList.add("aberto");
     $("drawerOverlay").classList.add("aberto");
