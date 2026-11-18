@@ -91,6 +91,50 @@
   <section id="resultado" hidden></section>
 </main>
 
+<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true"></div>
+
+<section id="modalFicha" class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="fichaTitulo" aria-hidden="true">
+  <div class="modal-handle" aria-hidden="true"></div>
+  <div class="modal-head">
+    <div id="fichaIcone" class="modal-ic"></div>
+    <div class="modal-head-info">
+      <span id="fichaTag" class="modal-tag"></span>
+      <h3 id="fichaTitulo"></h3>
+    </div>
+    <button id="btnFecharFichaX" class="modal-x" type="button" aria-label="Fechar ficha">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-sec">
+      <h4><i>//</i> O que é e para que serve</h4>
+      <p id="fichaDesc"></p>
+    </div>
+    <div class="modal-sec">
+      <h4><i>//</i> Exemplos práticos do que você pode fazer</h4>
+      <ul id="fichaExemplos" class="modal-lista"></ul>
+    </div>
+    <div id="fichaCompat" class="compat-box"></div>
+  </div>
+  <div class="modal-foot">
+    <button id="btnFecharFicha" class="btn sec" type="button">Fechar</button>
+    <a id="btnAcessarFicha" class="btn" href="#" target="_blank" rel="noopener noreferrer">Acessar Ferramenta →</a>
+  </div>
+</section>
+
+<section id="modalDesktop" class="modal-alert" role="dialog" aria-modal="true" aria-labelledby="desktopTitulo" aria-hidden="true">
+  <div class="modal-head">
+    <div id="desktopIcone" class="modal-ic"></div>
+    <div class="modal-head-info">
+      <span class="modal-tag aviso">AVISO DE COMPATIBILIDADE</span>
+      <h3 id="desktopTitulo"></h3>
+    </div>
+  </div>
+  <p id="desktopMsg" class="modal-alert-msg"></p>
+  <div class="modal-foot">
+    <button id="btnFecharDesktop" class="btn sec" type="button">Fechar</button>
+    <a id="btnAbrirDesktop" class="btn" href="#" target="_blank" rel="noopener noreferrer">Abrir mesmo assim →</a>
+  </div>
+</section>
+
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>

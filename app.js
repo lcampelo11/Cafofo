@@ -49,7 +49,9 @@
 
     if (pontos.length) return { it: pontos[0].it, alt: pontos.slice(1, 4).map(function (p) { return p.it; }) };
     if (temArquivo) {
-      var img = modules.filter(function (x) { return x.id === "imagem" || x.id === "copilot-designer" || x.id === "meta-ai" || x.id === "claude-chat" || x.id === "chatgpt"; })[0];
+      var img = modules.filter(function (x) {
+        return x.id === "imagem" || x.id === "copilot-designer" || x.id === "meta-ai" || x.id === "claude-chat" || x.id === "chatgpt";
+      })[0];
       if (img) return { it: img, alt: [], nota: "Você anexou um arquivo sem dizer o que fazer. Sugeri esta ferramenta." };
     }
     return { it: null, alt: [] };
@@ -132,12 +134,78 @@
     return base;
   }
 
+  function criarLightbulbSvg() {
+    return parseSvg('<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18H15M10 21H14M12 3C8.686 3 6 5.686 6 9C6 11.22 7.206 13.157 9 14.197V15.5C9 15.776 9.224 16 9.5 16H14.5C14.776 16 15 15.776 15 15.5V14.197C16.794 13.157 18 11.22 18 9C18 5.686 15.314 3 12 3Z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  }
+
   function linkExterno(cls, texto, url) {
     var a = el("a", cls, texto);
     a.href = url;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
     return a;
+  }
+
+  function fecharModais() {
+    $("modalBackdrop").classList.remove("aberto");
+    $("modalFicha").classList.remove("aberto");
+    $("modalDesktop").classList.remove("aberto");
+    $("modalBackdrop").setAttribute("aria-hidden", "true");
+    $("modalFicha").setAttribute("aria-hidden", "true");
+    $("modalDesktop").setAttribute("aria-hidden", "true");
+  }
+
+  function abrirModalFicha(it) {
+    var eco = getEcoAtivo();
+    var detalhes = it.details || {};
+    var fIc = $("fichaIcone");
+    fIc.textContent = "";
+    fIc.appendChild(iconeEl(it));
+
+    $("fichaTag").textContent = eco.nome.toUpperCase() + " · " + it.ferr;
+    $("fichaTitulo").textContent = it.titulo;
+    $("fichaDesc").textContent = detalhes.fullDescription || it.desc || it.porque || "";
+
+    var lista = $("fichaExemplos");
+    lista.textContent = "";
+    var exemplos = detalhes.examples && detalhes.examples.length ? detalhes.examples : [it.desc];
+    exemplos.forEach(function (ex) {
+      lista.appendChild(el("li", null, ex));
+    });
+
+    var compatEl = $("fichaCompat");
+    compatEl.textContent = "";
+    var textoCompat = it.desktopNotice || detalhes.compatibility || "Funciona 100% no celular e no computador.";
+    compatEl.className = "compat-box " + (it.desktopNotice ? "desktop-req" : "mobile-ok");
+    compatEl.appendChild(el("span", "compat-dot"));
+    compatEl.appendChild(el("span", null, textoCompat));
+
+    var btnAcessar = $("btnAcessarFicha");
+    btnAcessar.href = it.url;
+
+    $("modalDesktop").classList.remove("aberto");
+    $("modalDesktop").setAttribute("aria-hidden", "true");
+    $("modalBackdrop").classList.add("aberto");
+    $("modalFicha").classList.add("aberto");
+    $("modalBackdrop").setAttribute("aria-hidden", "false");
+    $("modalFicha").setAttribute("aria-hidden", "false");
+  }
+
+  function abrirAlertaDesktop(it) {
+    var dIc = $("desktopIcone");
+    dIc.textContent = "";
+    dIc.appendChild(iconeEl(it));
+
+    $("desktopTitulo").textContent = it.ferr + " — " + it.titulo;
+    $("desktopMsg").textContent = it.desktopNotice;
+    $("btnAbrirDesktop").href = it.url;
+
+    $("modalFicha").classList.remove("aberto");
+    $("modalFicha").setAttribute("aria-hidden", "true");
+    $("modalBackdrop").classList.add("aberto");
+    $("modalDesktop").classList.add("aberto");
+    $("modalBackdrop").setAttribute("aria-hidden", "false");
+    $("modalDesktop").setAttribute("aria-hidden", "false");
   }
 
   function mostrarHome() {
@@ -159,6 +227,8 @@
     var card = el("div", "box");
     if (intent) {
       card.appendChild(iconeEl(intent));
+    } else if (eco.iconLogo) {
+      card.appendChild(iconeEl({ logo: eco.iconLogo, svg: eco.iconSvg, icone: "✨" }));
     } else if (eco.iconSvg) {
       var ecoIc = el("span", "ic");
       var ecoSvg = parseSvg(eco.iconSvg);
@@ -168,6 +238,13 @@
     card.appendChild(el("h3", null, "Vou te levar para: " + nomeFerr));
     card.appendChild(el("p", null, porque));
     if (nota) card.appendChild(el("p", null, nota));
+    if (intent && intent.desktopNotice) {
+      var avisoRes = el("div", "compat-box desktop-req");
+      avisoRes.style.marginTop = "10px";
+      avisoRes.appendChild(el("span", "compat-dot"));
+      avisoRes.appendChild(el("span", null, intent.desktopNotice));
+      card.appendChild(avisoRes);
+    }
     if (texto) card.appendChild(el("div", "txt", texto));
     if (arquivo) card.appendChild(el("p", null, "Anexo: " + arquivo.name));
     box.appendChild(card);
@@ -176,7 +253,17 @@
     var acoes = el("div", "acoes");
 
     var abrir = linkExterno("btn", "Abrir " + nomeFerr + " →", urlFerr);
-    abrir.addEventListener("click", function () {
+    abrir.addEventListener("click", function (e) {
+      if (intent && intent.desktopNotice) {
+        e.preventDefault();
+        if (texto) {
+          copiar(texto).then(function (ok) {
+            if (ok) status.textContent = "Texto copiado. Cole na caixa quando abrir.";
+          });
+        }
+        abrirAlertaDesktop(intent);
+        return;
+      }
       if (texto) {
         copiar(texto).then(function (ok) {
           if (ok) status.textContent = "Texto copiado. Cole na caixa quando abrir.";
@@ -184,6 +271,13 @@
       }
     });
     acoes.appendChild(abrir);
+
+    if (intent && intent.details) {
+      var btnSaiba = el("button", "btn sec", "💡 Saiba mais sobre " + nomeFerr);
+      btnSaiba.type = "button";
+      btnSaiba.onclick = function () { abrirModalFicha(intent); };
+      acoes.appendChild(btnSaiba);
+    }
 
     if (intent && intent.url !== eco.chatUrl) {
       var abrirChat = linkExterno("btn sec", "Abrir chat principal (" + eco.chatNome + ")", eco.chatUrl);
@@ -265,16 +359,37 @@
     grid.textContent = "";
 
     modules.forEach(function (it) {
-      var c = el("button", "card");
-      c.type = "button";
+      var wrap = el("div", "card-wrap");
+
+      var c = linkExterno("card", null, it.url);
       var cab = el("span", "cab");
       cab.appendChild(iconeEl(it));
       cab.appendChild(el("span", "tl", it.ferr));
       c.appendChild(cab);
       c.appendChild(el("span", "tt", it.titulo));
       c.appendChild(el("small", null, it.desc || ""));
-      c.onclick = function () { mostrarResultado(it, [], null); };
-      grid.appendChild(c);
+
+      c.addEventListener("click", function (e) {
+        if (it.desktopNotice) {
+          e.preventDefault();
+          abrirAlertaDesktop(it);
+        }
+      });
+
+      var infoBtn = el("button", "btn-info");
+      infoBtn.type = "button";
+      infoBtn.setAttribute("aria-label", "Saiba mais sobre " + it.ferr);
+      var bulb = criarLightbulbSvg();
+      if (bulb) infoBtn.appendChild(bulb);
+      infoBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        abrirModalFicha(it);
+      });
+
+      wrap.appendChild(c);
+      wrap.appendChild(infoBtn);
+      grid.appendChild(wrap);
     });
 
     // Contador 100% dinamico baseado no array do ecossistema ativo
@@ -339,6 +454,7 @@
     if (!D.ecosystems.some(function (e) { return e.id === id; })) return;
     ecoAtivoId = id;
     salvarEco(id);
+    fecharModais();
     aplicarEcossistema();
     if (!$("resultado").hidden) {
       mostrarHome();
@@ -346,6 +462,7 @@
   }
 
   function abrirMenu() {
+    fecharModais();
     $("drawer").classList.add("aberto");
     $("drawerOverlay").classList.add("aberto");
     $("drawer").setAttribute("aria-hidden", "false");
@@ -371,9 +488,21 @@
   $("ecoBadge").addEventListener("click", abrirMenu);
   $("btnFecharMenu").addEventListener("click", fecharMenu);
   $("drawerOverlay").addEventListener("click", fecharMenu);
+
+  $("modalBackdrop").addEventListener("click", fecharModais);
+  $("btnFecharFicha").addEventListener("click", fecharModais);
+  $("btnFecharFichaX").addEventListener("click", fecharModais);
+  $("btnFecharDesktop").addEventListener("click", fecharModais);
+  $("btnAcessarFicha").addEventListener("click", fecharModais);
+  $("btnAbrirDesktop").addEventListener("click", fecharModais);
+
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && $("drawer").classList.contains("aberto")) {
-      fecharMenu();
+    if (e.key === "Escape") {
+      if ($("modalFicha").classList.contains("aberto") || $("modalDesktop").classList.contains("aberto")) {
+        fecharModais();
+      } else if ($("drawer").classList.contains("aberto")) {
+        fecharMenu();
+      }
     }
   });
 
