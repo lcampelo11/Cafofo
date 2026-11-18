@@ -144,7 +144,10 @@
   // Cards por tarefa
   D.intents.forEach(function (it) {
     var c = el("button", "card");
-    c.appendChild(iconeEl(it));
+    var cab = el("span", "cab");
+    cab.appendChild(iconeEl(it));
+    cab.appendChild(el("span", "tl", it.ferr || D.tools[it.tool].nome));
+    c.appendChild(cab);
     c.appendChild(el("span", "tt", it.titulo));
     c.appendChild(el("small", null, it.desc || D.tools[it.tool].oque));
     c.onclick = function () { mostrarResultado(it, [], null); };
@@ -165,6 +168,9 @@
     arquivo = this.files && this.files[0] ? this.files[0] : null;
     $("nomeArq").textContent = arquivo ? arquivo.name : "";
   });
+
+  var ta = $("texto");
+  ta.addEventListener("input", function () { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 110) + "px"; });
 
   $("btnVoltar").onclick = mostrarHome;
   $("btnDrive").onclick = function () {

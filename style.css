@@ -17,18 +17,18 @@ header{display:flex;flex-direction:column;align-items:center;padding:calc(18px +
 .nome{font:800 22px var(--mono);letter-spacing:.2em}
 main{max-width:600px;margin:0 auto;padding:22px 16px 48px}
 
-.entrada{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px 16px}
+.entrada{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:8px 12px 10px}
 .entrada::before,.entrada::after{content:"";position:absolute;width:14px;height:14px;border:2px solid var(--red)}
 .entrada::before{left:-1px;top:-1px;border-right:0;border-bottom:0;border-top-left-radius:6px}
 .entrada::after{right:-1px;bottom:-1px;border-left:0;border-top:0;border-bottom-right-radius:6px}
-textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--text);font:16px system-ui,sans-serif;padding:6px 0 14px;outline:none;resize:none}
+textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--text);font:16px system-ui,sans-serif;padding:2px 0 6px;outline:none;resize:none}
 textarea::placeholder{color:var(--muted)}
 textarea:focus{border-bottom-color:var(--red)}
-.row{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-.anexo{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:20px;padding:10px 14px;font:700 11px var(--mono);color:var(--text)}
+.row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.anexo{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:20px;padding:5px 10px;font:700 10px var(--mono);color:var(--text)}
 .anexo .seta{color:var(--red);font-size:14px}
 #nomeArq{flex:1;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-button.go{margin-left:auto;background:var(--red);color:#fff;border:0;border-radius:24px;padding:13px 24px;font:800 13px var(--mono);letter-spacing:.08em;box-shadow:0 0 18px rgba(255,36,51,.45)}
+button.go{margin-left:auto;background:var(--red);color:#fff;border:0;border-radius:20px;padding:7px 16px;font:800 11px var(--mono);letter-spacing:.08em;box-shadow:0 0 14px rgba(255,36,51,.45)}
 
 h2{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:26px 0 12px;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
 h2 i{font-style:normal;color:var(--red);font-family:var(--mono)}
@@ -58,3 +58,6 @@ h2 small{font:400 10px var(--mono);letter-spacing:.15em;color:var(--muted)}
 a.btn{display:block;text-align:center;text-decoration:none}
 header.simples{flex-direction:row;justify-content:flex-start;gap:12px}
 .tnome{font:700 14px var(--mono)}
+.cab{display:flex;align-items:center;gap:10px;min-height:40px;padding-right:16px}
+.tl{font:700 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#cfcfd6;line-height:1.3}
+.card .lg{max-width:64px}
