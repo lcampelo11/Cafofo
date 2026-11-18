@@ -21,7 +21,7 @@ window.CAFOFO = {
 
   // kw = inicios de palavras (sem acento). O app escolhe a tarefa com mais acertos.
   intents: [
-    { id: "imagem", logo: "icons/nanobanana-color.svg",  icone: "🖼️", titulo: "Criar ou editar imagem", tool: "gemini",
+    { id: "imagem", logo: "icons/nanobanana-color.svg",  icone: "🖼️", titulo: "Criar ou editar imagem", desc: "Cria e edita imagens e fotos com o Nano Banana", tool: "gemini",
       porque: "Imagens e edição de fotos (Nano Banana) ficam dentro do app Gemini.",
       kw: ["imag","foto","logo","desenh","render","planta","layout","ilustr","design","aquario","retrato","arte","figura","editar foto","tirar fundo","colocar"] },
     { id: "video", logo: "icons/flow.png",   icone: "🎬", titulo: "Criar vídeo", tool: "flow",
@@ -33,10 +33,10 @@ window.CAFOFO = {
     { id: "estudar", logo: "icons/notebooklm.png", icone: "📚", titulo: "Estudar ou resumir PDF", tool: "notebook",
       porque: "O Gemini Notebook lê os seus arquivos e gera resumo, mapa mental e podcast.",
       kw: ["pdf","estud","resum","livro","artigo","apostila","podcast","mapa mental","fonte","prova","aula","ebook"] },
-    { id: "pesquisa", logo: "icons/gemini-color.svg",icone: "🔎", titulo: "Pesquisa profunda", tool: "gemini",
+    { id: "pesquisa", logo: "icons/gemini-color.svg",icone: "🔎", titulo: "Pesquisa profunda", desc: "Deep Research: relatórios com várias fontes", tool: "gemini",
       porque: "A Deep Research do Gemini monta relatórios com várias fontes.",
       kw: ["pesquis","relatorio","comparar","mercado","concorrente","analise","tendenc","existe algum"] },
-    { id: "codigo", logo: "icons/gemini-color.svg",  icone: "💻", titulo: "Criar site, app ou código", tool: "gemini",
+    { id: "codigo", logo: "icons/gemini-color.svg",  icone: "💻", titulo: "Criar site, app ou código", desc: "Chat e Canvas: escreve e mostra código na hora", tool: "gemini",
       porque: "O Canvas do Gemini escreve e mostra código na hora.",
       kw: ["codig","program","site","aplicativo","app ","python","script","landing","backend","pagina web","html","sistema"] },
     { id: "texto", logo: "icons/googledocs.svg",   icone: "📝", titulo: "Escrever documento", tool: "docs",

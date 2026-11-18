@@ -145,11 +145,13 @@
   D.intents.forEach(function (it) {
     var c = el("button", "card");
     c.appendChild(iconeEl(it));
-    c.appendChild(document.createTextNode(it.titulo));
-    c.appendChild(el("small", null, D.tools[it.tool].oque));
+    c.appendChild(el("span", "tt", it.titulo));
+    c.appendChild(el("small", null, it.desc || D.tools[it.tool].oque));
     c.onclick = function () { mostrarResultado(it, [], null); };
     $("grid").appendChild(c);
   });
+
+  $("modulos").textContent = D.intents.length + " MÓDULOS";
 
   $("form").addEventListener("submit", function (e) {
     e.preventDefault();
