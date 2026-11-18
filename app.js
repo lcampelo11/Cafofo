@@ -50,6 +50,15 @@
     return e;
   }
 
+  // Logo da ferramenta; se faltar a imagem, mostra o emoji.
+  function iconeEl(it) {
+    if (!it.logo) return el("span", "ic", it.icone);
+    var im = document.createElement("img");
+    im.className = "lg"; im.alt = ""; im.src = it.logo;
+    im.onerror = function () { var s = el("span", "ic", it.icone); if (im.parentNode) im.parentNode.replaceChild(s, im); };
+    return im;
+  }
+
   function mostrarHome() {
     $("resultado").hidden = true; $("home").hidden = false; $("btnVoltar").hidden = true;
     window.scrollTo(0, 0);
@@ -63,6 +72,7 @@
     box.textContent = "";
 
     var card = el("div", "box");
+    if (intent) card.appendChild(iconeEl(intent));
     card.appendChild(el("h3", null, "Vou te levar para: " + tool.nome));
     card.appendChild(el("p", null, porque));
     if (nota) card.appendChild(el("p", null, nota));
@@ -134,7 +144,7 @@
   // Cards por tarefa
   D.intents.forEach(function (it) {
     var c = el("button", "card");
-    c.appendChild(el("span", "ic", it.icone));
+    c.appendChild(iconeEl(it));
     c.appendChild(document.createTextNode(it.titulo));
     c.appendChild(el("small", null, D.tools[it.tool].oque));
     c.onclick = function () { mostrarResultado(it, [], null); };

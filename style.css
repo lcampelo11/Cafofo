@@ -30,3 +30,5 @@ button.go,.btn{background:var(--red);color:#fff;border:0;border-radius:20px;padd
 .chip{background:#fff;border:1px solid var(--silver);border-radius:16px;padding:7px 12px;font-size:13px}
 .ok{color:#0f7b3f}.no{color:var(--red)}
 a.btn{display:block;text-align:center;text-decoration:none}
+.lg{width:32px;height:32px;object-fit:contain;display:block;margin-bottom:6px}
+.card .lg{margin-bottom:0}

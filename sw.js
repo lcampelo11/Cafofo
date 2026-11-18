@@ -1,5 +1,5 @@
-var CACHE = "cafofo-v2";
-var ARQ = ["./", "index.html", "style.css", "app.js", "data.js", "teste.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "logo.png"];
+var CACHE = "cafofo-v3";
+var ARQ = ["./", "index.html", "style.css", "app.js", "data.js", "teste.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "logo.png", "icons/nanobanana-color.svg", "icons/gemini-color.svg", "icons/notebooklm.svg", "icons/googledocs.svg", "icons/googlesheets.svg", "icons/gmail.svg", "icons/googletranslate.svg", "icons/googledrive.svg"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(ARQ); }).then(function () { return self.skipWaiting(); }));
