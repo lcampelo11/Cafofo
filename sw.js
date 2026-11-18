@@ -1,4 +1,4 @@
-var CACHE = "cafofo-v7";
+var CACHE = "cafofo-v8";
 var ARQ = ["./", "index.html", "style.css", "app.js", "data.js", "teste.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "logo.png", "logo-aco.jpg", "icons/nanobanana-color.svg", "icons/gemini-color.svg", "icons/notebooklm.png", "icons/flow.png", "icons/flowmusic.png", "icons/googledocs.svg", "icons/googlesheets.svg", "icons/gmail.svg", "icons/googletranslate.svg", "icons/googledrive.svg"];
 
 self.addEventListener("install", function (e) {
