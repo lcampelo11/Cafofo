@@ -1,18 +1,45 @@
 (function () {
   var D = window.CAFOFO;
+  var STORAGE_KEY = "cafofo_ecossistema";
   var $ = function (id) { return document.getElementById(id); };
   var arquivo = null;
 
-  function norm(s) {
-    return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  function lerEcoSalvo() {
+    try {
+      var salvo = localStorage.getItem(STORAGE_KEY);
+      if (salvo && D.ecosystems.some(function (e) { return e.id === salvo; })) {
+        return salvo;
+      }
+    } catch (e) {}
+    return D.defaultEcosystem || D.ecosystems[0].id;
   }
 
-  // Escolhe a tarefa pelo numero de palavras reconhecidas.
-  function rotear(texto, temArquivo) {
+  var ecoAtivoId = lerEcoSalvo();
+
+  function getEcoAtivo() {
+    for (var i = 0; i < D.ecosystems.length; i++) {
+      if (D.ecosystems[i].id === ecoAtivoId) return D.ecosystems[i];
+    }
+    return D.ecosystems[0];
+  }
+
+  function salvarEco(id) {
+    try {
+      localStorage.setItem(STORAGE_KEY, id);
+    } catch (e) {}
+  }
+
+  function norm(s) {
+    return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  // Escolhe a tarefa pelo numero de palavras reconhecidas dentro do ecossistema ativo.
+  function rotear(texto, temArquivo, eco) {
     var t = norm(texto);
-    var pontos = D.intents.map(function (it) {
+    var modules = eco.modules || [];
+    var pontos = modules.map(function (it) {
       var n = 0;
-      it.kw.forEach(function (k) {
+      (it.kw || []).forEach(function (k) {
         var i = t.indexOf(k);
         if (i === 0 || (i > 0 && /\W/.test(t.charAt(i - 1)))) n++;
       });
@@ -22,8 +49,8 @@
 
     if (pontos.length) return { it: pontos[0].it, alt: pontos.slice(1, 4).map(function (p) { return p.it; }) };
     if (temArquivo) {
-      var img = D.intents.filter(function (x) { return x.id === "imagem"; })[0];
-      return { it: img, alt: [], nota: "Você anexou um arquivo sem dizer o que fazer. Sugeri editar imagem." };
+      var img = modules.filter(function (x) { return x.id === "imagem" || x.id === "copilot-designer" || x.id === "meta-ai" || x.id === "claude-chat" || x.id === "chatgpt"; })[0];
+      if (img) return { it: img, alt: [], nota: "Você anexou um arquivo sem dizer o que fazer. Sugeri esta ferramenta." };
     }
     return { it: null, alt: [] };
   }
@@ -35,6 +62,7 @@
     }
     return Promise.resolve(fallbackCopia(texto));
   }
+
   function fallbackCopia(texto) {
     try {
       var ta = document.createElement("textarea");
@@ -50,30 +78,94 @@
     return e;
   }
 
-  // Logo da ferramenta; se faltar a imagem, mostra o emoji.
+  function parseSvg(svgStr) {
+    try {
+      var doc = new DOMParser().parseFromString(svgStr, "image/svg+xml");
+      if (doc && doc.documentElement && doc.documentElement.nodeName.toLowerCase() === "svg") {
+        return document.importNode(doc.documentElement, true);
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  // Icone da ferramenta: prioriza logo oficial (img), com fallback seguro para SVG inline ou emoji.
   function iconeEl(it) {
-    if (!it.logo) return el("span", "ic", it.icone);
-    var im = document.createElement("img");
-    im.className = "lg"; im.alt = ""; im.src = it.logo;
-    im.onerror = function () { var s = el("span", "ic", it.icone); if (im.parentNode) im.parentNode.replaceChild(s, im); };
-    return im;
+    var base;
+    if (it.logo) {
+      var im = document.createElement("img");
+      im.className = "lg";
+      im.alt = "";
+      im.src = it.logo;
+      im.onerror = function () {
+        var fallback = null;
+        if (it.svg) {
+          var wrap = el("span", "ic");
+          var svgNode = parseSvg(it.svg);
+          if (svgNode) {
+            wrap.appendChild(svgNode);
+            fallback = wrap;
+          }
+        }
+        if (!fallback) fallback = el("span", "ic", it.icone || "✨");
+        if (im.parentNode) im.parentNode.replaceChild(fallback, im);
+      };
+      base = im;
+    } else if (it.svg) {
+      var wrap = el("span", "ic");
+      var svgNode = parseSvg(it.svg);
+      if (svgNode) {
+        wrap.appendChild(svgNode);
+        base = wrap;
+      } else {
+        base = el("span", "ic", it.icone || "✨");
+      }
+    } else {
+      base = el("span", "ic", it.icone || "✨");
+    }
+
+    if (it.badge) {
+      var box = el("span", "ic-wrap");
+      box.appendChild(base);
+      box.appendChild(el("span", "ic-badge", it.badge));
+      return box;
+    }
+    return base;
+  }
+
+  function linkExterno(cls, texto, url) {
+    var a = el("a", cls, texto);
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    return a;
   }
 
   function mostrarHome() {
-    $("resultado").hidden = true; $("home").hidden = false; $("btnVoltar").hidden = true;
+    $("resultado").hidden = true;
+    $("home").hidden = false;
+    $("btnVoltar").hidden = true;
     window.scrollTo(0, 0);
   }
 
   function mostrarResultado(intent, alt, nota) {
+    var eco = getEcoAtivo();
     var texto = $("texto").value.trim();
-    var tool = intent ? D.tools[intent.tool] : D.tools[D.padrao.tool];
-    var porque = intent ? intent.porque : D.padrao.porque;
+    var nomeFerr = intent ? intent.ferr : eco.chatNome;
+    var urlFerr = intent ? intent.url : eco.chatUrl;
+    var porque = intent ? intent.porque : eco.padraoPorque;
     var box = $("resultado");
     box.textContent = "";
 
     var card = el("div", "box");
-    if (intent) card.appendChild(iconeEl(intent));
-    card.appendChild(el("h3", null, "Vou te levar para: " + tool.nome));
+    if (intent) {
+      card.appendChild(iconeEl(intent));
+    } else if (eco.iconSvg) {
+      var ecoIc = el("span", "ic");
+      var ecoSvg = parseSvg(eco.iconSvg);
+      if (ecoSvg) ecoIc.appendChild(ecoSvg);
+      card.appendChild(ecoIc);
+    }
+    card.appendChild(el("h3", null, "Vou te levar para: " + nomeFerr));
     card.appendChild(el("p", null, porque));
     if (nota) card.appendChild(el("p", null, nota));
     if (texto) card.appendChild(el("div", "txt", texto));
@@ -83,36 +175,56 @@
     var status = el("div", "status");
     var acoes = el("div", "acoes");
 
-    var abrir = el("button", "btn", "Abrir " + tool.nome);
-    abrir.onclick = function () {
-      copiar(texto).then(function (ok) {
-        if (ok && texto) status.textContent = "Texto copiado. Cole na caixa quando abrir.";
-        window.open(tool.url, "_blank", "noopener");
-      });
-    };
+    var abrir = linkExterno("btn", "Abrir " + nomeFerr + " →", urlFerr);
+    abrir.addEventListener("click", function () {
+      if (texto) {
+        copiar(texto).then(function (ok) {
+          if (ok) status.textContent = "Texto copiado. Cole na caixa quando abrir.";
+        });
+      }
+    });
     acoes.appendChild(abrir);
+
+    if (intent && intent.url !== eco.chatUrl) {
+      var abrirChat = linkExterno("btn sec", "Abrir chat principal (" + eco.chatNome + ")", eco.chatUrl);
+      abrirChat.addEventListener("click", function () {
+        if (texto) {
+          copiar(texto).then(function (ok) {
+            if (ok) status.textContent = "Texto copiado. Cole no " + eco.chatNome + " quando abrir.";
+          });
+        }
+      });
+      acoes.appendChild(abrirChat);
+    }
 
     if (arquivo && navigator.canShare && navigator.canShare({ files: [arquivo] })) {
       var comp = el("button", "btn sec", "Compartilhar foto + texto");
+      comp.type = "button";
       comp.onclick = function () {
         var dados = { files: [arquivo], title: "Cafofo" };
         if (texto) dados.text = texto;
         navigator.share(dados).then(function () {
-          status.textContent = "Escolha o app Gemini na lista.";
+          status.textContent = "Escolha o app " + eco.chatNome + " na lista.";
         }, function (e) {
           if (e && e.name !== "AbortError") status.textContent = "Não deu para compartilhar: " + e.name;
         });
       };
       acoes.appendChild(comp);
     } else if (arquivo) {
-      acoes.appendChild(el("p", null, "Este aparelho não compartilha arquivo pelo navegador. Anexe a foto direto no Gemini."));
+      acoes.appendChild(el("p", null, "Este aparelho não compartilha arquivo pelo navegador. Anexe o arquivo direto ao abrir a ferramenta."));
     }
 
     if (texto) {
       var cp = el("button", "btn sec", "Só copiar o texto");
-      cp.onclick = function () { copiar(texto).then(function (ok) { status.textContent = ok ? "Texto copiado." : "Não consegui copiar."; }); };
+      cp.type = "button";
+      cp.onclick = function () {
+        copiar(texto).then(function (ok) {
+          status.textContent = ok ? "Texto copiado." : "Não consegui copiar.";
+        });
+      };
       acoes.appendChild(cp);
     }
+
     box.appendChild(acoes);
     box.appendChild(status);
 
@@ -120,47 +232,160 @@
       box.appendChild(el("h2", null, "Não era isso? Tente"));
       var chips = el("div", "chips");
       alt.forEach(function (a) {
-        var c = el("button", "chip", a.icone + " " + a.titulo);
+        var c = el("button", "chip", (a.icone ? a.icone + " " : "") + a.titulo);
+        c.type = "button";
         c.onclick = function () { mostrarResultado(a, [], null); };
         chips.appendChild(c);
       });
       box.appendChild(chips);
     }
+
     if (!intent) {
-      box.appendChild(el("h2", null, "Escolha você"));
+      box.appendChild(el("h2", null, "Ou escolha um módulo"));
       var g = el("div", "chips");
-      D.intents.forEach(function (a) {
-        var c = el("button", "chip", a.icone + " " + a.titulo);
+      (eco.modules || []).forEach(function (a) {
+        var c = el("button", "chip", (a.icone ? a.icone + " " : "") + a.titulo);
+        c.type = "button";
         c.onclick = function () { mostrarResultado(a, [], null); };
         g.appendChild(c);
       });
       box.appendChild(g);
     }
 
-    $("home").hidden = true; box.hidden = false; $("btnVoltar").hidden = false;
+    $("home").hidden = true;
+    box.hidden = false;
+    $("btnVoltar").hidden = false;
     window.scrollTo(0, 0);
   }
 
-  // Cards por tarefa
-  D.intents.forEach(function (it) {
-    var c = el("button", "card");
-    var cab = el("span", "cab");
-    cab.appendChild(iconeEl(it));
-    cab.appendChild(el("span", "tl", it.ferr || D.tools[it.tool].nome));
-    c.appendChild(cab);
-    c.appendChild(el("span", "tt", it.titulo));
-    c.appendChild(el("small", null, it.desc || D.tools[it.tool].oque));
-    c.onclick = function () { mostrarResultado(it, [], null); };
-    $("grid").appendChild(c);
-  });
+  function renderModulos(eco) {
+    var grid = $("grid");
+    var modules = eco.modules || [];
+    grid.classList.add("trocando");
+    grid.textContent = "";
 
-  $("modulos").textContent = D.intents.length + " MÓDULOS";
+    modules.forEach(function (it) {
+      var c = el("button", "card");
+      c.type = "button";
+      var cab = el("span", "cab");
+      cab.appendChild(iconeEl(it));
+      cab.appendChild(el("span", "tl", it.ferr));
+      c.appendChild(cab);
+      c.appendChild(el("span", "tt", it.titulo));
+      c.appendChild(el("small", null, it.desc || ""));
+      c.onclick = function () { mostrarResultado(it, [], null); };
+      grid.appendChild(c);
+    });
+
+    // Contador 100% dinamico baseado no array do ecossistema ativo
+    $("modulos").textContent = modules.length + " MÓDULOS";
+
+    requestAnimationFrame(function () {
+      grid.classList.remove("trocando");
+    });
+  }
+
+  function renderDrawer() {
+    var lista = $("listaEcossistemas");
+    lista.textContent = "";
+    var ecoAtivo = getEcoAtivo();
+
+    D.ecosystems.forEach(function (eco) {
+      var btn = el("button", "eco-item" + (eco.id === ecoAtivo.id ? " ativo" : ""));
+      btn.type = "button";
+
+      var ic = el("span", "eco-ic");
+      if (eco.iconLogo) {
+        var ecoImg = document.createElement("img");
+        ecoImg.alt = "";
+        ecoImg.src = eco.iconLogo;
+        ecoImg.onerror = function () {
+          var s = parseSvg(eco.iconSvg);
+          if (s && ecoImg.parentNode) ecoImg.parentNode.replaceChild(s, ecoImg);
+        };
+        ic.appendChild(ecoImg);
+      } else {
+        var svgNode = parseSvg(eco.iconSvg);
+        if (svgNode) ic.appendChild(svgNode);
+      }
+      btn.appendChild(ic);
+
+      var info = el("span", "eco-info");
+      info.appendChild(el("span", "eco-nome", eco.nome));
+      info.appendChild(el("span", "eco-sub", eco.chatUrl.replace("https://", "").replace(/\/$/, "")));
+      btn.appendChild(info);
+
+      btn.appendChild(el("span", "eco-qtd", String((eco.modules || []).length)));
+
+      btn.onclick = function () {
+        selecionarEcossistema(eco.id);
+        fecharMenu();
+      };
+      lista.appendChild(btn);
+    });
+
+    $("drawerChatInfo").textContent = "Chat ativo: " + ecoAtivo.chatUrl;
+  }
+
+  function aplicarEcossistema() {
+    var eco = getEcoAtivo();
+    $("texto").placeholder = eco.placeholder || "O que você quer fazer?";
+    $("ecoBadgeNome").textContent = eco.nome;
+    renderModulos(eco);
+    renderDrawer();
+  }
+
+  function selecionarEcossistema(id) {
+    if (!D.ecosystems.some(function (e) { return e.id === id; })) return;
+    ecoAtivoId = id;
+    salvarEco(id);
+    aplicarEcossistema();
+    if (!$("resultado").hidden) {
+      mostrarHome();
+    }
+  }
+
+  function abrirMenu() {
+    $("drawer").classList.add("aberto");
+    $("drawerOverlay").classList.add("aberto");
+    $("drawer").setAttribute("aria-hidden", "false");
+    $("drawerOverlay").setAttribute("aria-hidden", "false");
+    $("btnMenu").setAttribute("aria-expanded", "true");
+  }
+
+  function fecharMenu() {
+    $("drawer").classList.remove("aberto");
+    $("drawerOverlay").classList.remove("aberto");
+    $("drawer").setAttribute("aria-hidden", "true");
+    $("drawerOverlay").setAttribute("aria-hidden", "true");
+    $("btnMenu").setAttribute("aria-expanded", "false");
+  }
+
+  $("btnMenu").addEventListener("click", function () {
+    if ($("drawer").classList.contains("aberto")) {
+      fecharMenu();
+    } else {
+      abrirMenu();
+    }
+  });
+  $("ecoBadge").addEventListener("click", abrirMenu);
+  $("btnFecharMenu").addEventListener("click", fecharMenu);
+  $("drawerOverlay").addEventListener("click", fecharMenu);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $("drawer").classList.contains("aberto")) {
+      fecharMenu();
+    }
+  });
 
   $("form").addEventListener("submit", function (e) {
     e.preventDefault();
+    var eco = getEcoAtivo();
     var texto = $("texto").value.trim();
-    if (!texto && !arquivo) { $("texto").focus(); return; }
-    var r = rotear(texto, !!arquivo);
+    if (!texto && !arquivo) {
+      $("texto").focus();
+      return;
+    }
+    var r = rotear(texto, !!arquivo, eco);
     mostrarResultado(r.it, r.alt, r.nota);
   });
 
@@ -170,12 +395,15 @@
   });
 
   var ta = $("texto");
-  ta.addEventListener("input", function () { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 110) + "px"; });
+  ta.addEventListener("input", function () {
+    ta.style.height = "auto";
+    ta.style.height = Math.min(ta.scrollHeight, 110) + "px";
+  });
 
   $("btnVoltar").onclick = mostrarHome;
-  $("btnDrive").onclick = function () {
-    window.open(D.driveFolderUrl || D.tools.drive.url, "_blank", "noopener");
-  };
+  $("btnDrive").href = D.driveFolderUrl || D.driveUrl || "https://drive.google.com";
+
+  aplicarEcossistema();
 
   if ("serviceWorker" in navigator) {
     try { navigator.serviceWorker.register("sw.js"); } catch (e) {}

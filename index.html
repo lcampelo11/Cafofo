@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cafofo</title>
+<meta name="description" content="Cafofo - Central Multi-Ecossistema de Inteligência Artificial.">
+<meta property="og:title" content="Cafofo">
+<meta property="og:description" content="Cafofo - Central Multi-Ecossistema de Inteligência Artificial.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -34,12 +37,34 @@
   <div class="pontos b"></div>
 </div>
 
+<button id="btnMenu" class="menu-btn" type="button" aria-label="Abrir menu de ecossistemas" aria-expanded="false" aria-controls="drawer">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M4 7H20M4 12H20M4 17H20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+  </svg>
+</button>
+
+<div id="drawerOverlay" class="drawer-overlay" aria-hidden="true"></div>
+<aside id="drawer" class="drawer" aria-label="Seletor de ecossistemas" aria-hidden="true">
+  <div class="drawer-topo">
+    <span class="drawer-titulo"><i>//</i> Ecossistemas</span>
+    <button id="btnFecharMenu" class="drawer-fechar" type="button" aria-label="Fechar menu">×</button>
+  </div>
+  <nav id="listaEcossistemas" class="drawer-lista" aria-label="Ecossistemas de IA"></nav>
+  <div class="drawer-rodape">
+    <small id="drawerChatInfo"></small>
+  </div>
+</aside>
+
 <header>
-  <button id="btnVoltar" hidden>← Voltar</button>
+  <button id="btnVoltar" type="button" hidden>← Voltar</button>
   <div class="marca">
     <img src="logo-aco.jpg" alt="Cafofo" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
     <span class="nome" hidden>CAFOFO</span>
   </div>
+  <button id="ecoBadge" class="eco-badge" type="button" aria-label="Trocar ecossistema">
+    <span class="eco-dot" aria-hidden="true"></span>
+    <span id="ecoBadgeNome">Google</span>
+  </button>
 </header>
 
 <main>
@@ -58,8 +83,8 @@
 
     <h2><span><i>//</i> Atalhos</span></h2>
     <div class="links">
-      <button class="btn sec" id="btnDrive">🗂️ Minhas imagens (Drive)</button>
-      <a class="btn sec" href="teste.html">🧪 Página de teste</a>
+      <a class="btn sec" id="btnDrive" href="https://drive.google.com" target="_blank" rel="noopener noreferrer">🗂️ Minhas imagens (Drive)</a>
+      <a class="btn sec" href="teste.html" target="_blank" rel="noopener noreferrer">🧪 Página de teste</a>
     </div>
   </section>
 
