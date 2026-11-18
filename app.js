@@ -68,8 +68,15 @@
   function fallbackCopia(texto) {
     try {
       var ta = document.createElement("textarea");
-      ta.value = texto; document.body.appendChild(ta); ta.select();
-      var ok = document.execCommand("copy"); document.body.removeChild(ta); return ok;
+      ta.value = texto;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
     } catch (e) { return false; }
   }
 
@@ -141,7 +148,6 @@
   function linkExterno(cls, texto, url) {
     var a = el("a", cls, texto);
     a.href = url;
-    a.target = "_blank";
     a.rel = "noopener noreferrer";
     return a;
   }
@@ -268,6 +274,7 @@
       if (intent && intent.desktopNotice) {
         e.preventDefault();
         if (texto) {
+          fallbackCopia(texto);
           copiar(texto).then(function (ok) {
             if (ok) status.textContent = "Texto copiado. Cole na caixa quando abrir.";
           });
@@ -276,6 +283,7 @@
         return;
       }
       if (texto) {
+        fallbackCopia(texto);
         copiar(texto).then(function (ok) {
           if (ok) status.textContent = "Texto copiado. Cole na caixa quando abrir.";
         });
@@ -294,6 +302,7 @@
       var abrirChat = linkExterno("btn sec", "Abrir chat principal (" + eco.chatNome + ")", eco.chatUrl);
       abrirChat.addEventListener("click", function () {
         if (texto) {
+          fallbackCopia(texto);
           copiar(texto).then(function (ok) {
             if (ok) status.textContent = "Texto copiado. Cole no " + eco.chatNome + " quando abrir.";
           });
