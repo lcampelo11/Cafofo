@@ -12,7 +12,7 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(
 header,main{position:relative;z-index:1}
 header{display:flex;flex-direction:column;align-items:center;padding:calc(18px + env(safe-area-inset-top)) 16px 6px}
 #btnVoltar{align-self:flex-start;margin-bottom:10px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:#fff;border-radius:20px;padding:8px 14px;font:700 12px var(--mono)}
-.marca img{display:block;width:min(162px,43vw);height:auto;border-radius:10px;border:1px solid #ff5a64;
+.marca img{display:block;width:min(81px,22vw);height:auto;border-radius:10px;border:1px solid #ff5a64;
  box-shadow:0 0 3px #ff4450,0 0 12px rgba(255,36,51,.8),0 0 30px rgba(255,20,30,.4)}
 .nome{font:800 22px var(--mono);letter-spacing:.2em}
 main{max-width:600px;margin:0 auto;padding:22px 16px 48px}
