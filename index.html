@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cafofo</title>
-<meta name="description" content="Cafofo - Central Multi-Ecossistema de Inteligência Artificial.">
+<meta name="description" content="Cafofo - Central Multi-Ecossistema de Inteligência Artificial e Produtividade.">
 <meta property="og:title" content="Cafofo">
-<meta property="og:description" content="Cafofo - Central Multi-Ecossistema de Inteligência Artificial.">
+<meta property="og:description" content="Cafofo - Central Multi-Ecossistema de Inteligência Artificial e Produtividade.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -25,10 +25,10 @@
       <path id="p5" d="M250 810 L580 480"/>
     </defs>
     <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <g filter="url(#g)" stroke="#ff2433" stroke-width="3.5" opacity=".85">
+      <g filter="url(#g)" stroke="#ff2433" stroke-width="3.5" opacity=".75">
         <use href="#p1"/><use href="#p2"/><use href="#p3"/><use href="#p4"/><use href="#p5"/>
       </g>
-      <g stroke="#ff5a64" stroke-width="1" opacity=".95">
+      <g stroke="#ff5a64" stroke-width="1" opacity=".85">
         <use href="#p1"/><use href="#p2"/><use href="#p3"/><use href="#p4"/><use href="#p5"/>
       </g>
     </g>
@@ -73,27 +73,54 @@
   </div>
   <button id="ecoBadge" class="eco-badge" type="button" aria-label="Trocar ecossistema">
     <span class="eco-dot" aria-hidden="true"></span>
-    <span id="ecoBadgeNome">Google</span>
+    <span id="ecoBadgeNome">Todos os Ecossistemas</span>
   </button>
 </header>
 
 <main>
   <section id="home">
     <form id="form" class="entrada">
-      <textarea id="texto" rows="1" placeholder="Ex.: colocar um aquário nessa sala"></textarea>
+      <textarea id="texto" rows="1" placeholder="Descreva sua tarefa para rotear a melhor IA (ex.: criar automação, editar vídeo, gerar código)..."></textarea>
       <div class="row">
         <label class="anexo"><span class="seta">↗</span> Foto ou PDF<input type="file" id="arquivo" accept="image/*,application/pdf" hidden></label>
         <span id="nomeArq"></span>
-        <button class="go" type="submit">IR →</button>
+        <button class="go" type="submit">ROTEAR →</button>
       </div>
     </form>
 
-    <h2><span><i>//</i> Ou escolha o que quer fazer</span><small id="modulos"></small></h2>
-    <div class="grid" id="grid"></div>
+    <div class="dash-toolbar">
+      <div class="busca-wrap">
+        <svg class="busca-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+          <path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="buscaFerramentas" type="search" autocomplete="off" placeholder="Buscar ferramenta, categoria ou função (ex: vídeo, n8n, API, código)...">
+        <button id="btnLimparBusca" class="busca-clear" type="button" aria-label="Limpar busca" hidden>×</button>
+      </div>
+      <div class="dash-actions">
+        <button id="btnNovaFerramenta" class="btn-steel accent" type="button">+ Adicionar Ferramenta</button>
+        <button id="btnBackupJson" class="btn-steel" type="button">Backup JSON</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div id="ecoTabs" class="eco-tabs" role="tablist" aria-label="Filtrar por ecossistema"></div>
+      <div id="catFiltros" class="cat-filtros" role="group" aria-label="Filtrar por categoria funcional"></div>
+    </div>
+
+    <section id="favSection" class="fav-section" hidden>
+      <h2><span><i>★</i> Fixados no Topo</span><small id="favCount"></small></h2>
+      <div id="favGrid" class="grid"></div>
+    </section>
+
+    <div class="catalog-head">
+      <h2><span><i>//</i> Ecossistemas & Ferramentas</span><small id="modulos"></small></h2>
+    </div>
+    <div id="gridContainer" class="catalog-container"></div>
 
     <h2><span><i>//</i> Atalhos</span></h2>
     <div class="links">
-      <a class="btn sec" id="btnDrive" href="https://drive.google.com" rel="noopener noreferrer">🗂️ Minhas imagens (Drive)</a>
+      <a class="btn sec" id="btnDrive" href="https://drive.google.com" target="_blank" rel="noopener noreferrer">🗂️ Minhas imagens (Drive)</a>
       <a class="btn sec" href="teste.html" target="_blank" rel="noopener noreferrer">🧪 Página de teste</a>
     </div>
   </section>
@@ -126,7 +153,7 @@
   </div>
   <div class="modal-foot">
     <button id="btnFecharFicha" class="btn sec" type="button">Fechar</button>
-    <a id="btnAcessarFicha" class="btn" href="#" rel="noopener noreferrer">Acessar Ferramenta →</a>
+    <a id="btnAcessarFicha" class="btn" href="#" target="_blank" rel="noopener noreferrer">Acessar Ferramenta →</a>
   </div>
 </section>
 
@@ -141,7 +168,112 @@
   <p id="desktopMsg" class="modal-alert-msg"></p>
   <div class="modal-foot">
     <button id="btnFecharDesktop" class="btn sec" type="button">Fechar</button>
-    <a id="btnAbrirDesktop" class="btn" href="#" rel="noopener noreferrer">Abrir mesmo assim →</a>
+    <a id="btnAbrirDesktop" class="btn" href="#" target="_blank" rel="noopener noreferrer">Abrir mesmo assim →</a>
+  </div>
+</section>
+
+<section id="modalCustomTool" class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="customToolTitulo" aria-hidden="true">
+  <div class="modal-handle" aria-hidden="true"></div>
+  <div class="modal-head">
+    <div class="modal-ic">⚡</div>
+    <div class="modal-head-info">
+      <span class="modal-tag">ATALHO PERSONALIZADO</span>
+      <h3 id="customToolTitulo">Adicionar Ferramenta ao CaFofo</h3>
+    </div>
+    <button id="btnFecharCustomX" class="modal-x" type="button" aria-label="Fechar">×</button>
+  </div>
+  <form id="formCustomTool" class="custom-form">
+    <div class="custom-grid">
+      <label class="custom-field">
+        <span>Nome oficial *</span>
+        <input id="customNome" type="text" required placeholder="Ex: Cursor, Lovable, Bolt.new">
+      </label>
+      <label class="custom-field">
+        <span>URL oficial *</span>
+        <input id="customUrl" type="url" required placeholder="https://...">
+      </label>
+    </div>
+    <label class="custom-field">
+      <span>Descrição curta (1 linha) *</span>
+      <input id="customDesc" type="text" required maxlength="140" placeholder="Ex: IDE com IA para editar código e agentes multi-arquivo.">
+    </label>
+    <div class="custom-grid">
+      <label class="custom-field">
+        <span>Ecossistema</span>
+        <select id="customEco"></select>
+      </label>
+      <label class="custom-field">
+        <span>Categoria funcional</span>
+        <select id="customCat"></select>
+      </label>
+    </div>
+    <div class="custom-grid triple">
+      <label class="custom-field">
+        <span>Tipo / Badge</span>
+        <select id="customType">
+          <option value="Chat">Chat</option>
+          <option value="Código">Código</option>
+          <option value="Automação">Automação</option>
+          <option value="Agentes">Agentes</option>
+          <option value="Vídeo">Vídeo</option>
+          <option value="Áudio">Áudio</option>
+          <option value="Imagem">Imagem</option>
+          <option value="Design">Design</option>
+          <option value="Cloud/API">Cloud/API</option>
+          <option value="Pesquisa">Pesquisa</option>
+          <option value="Produtividade">Produtividade</option>
+        </select>
+      </label>
+      <label class="custom-field">
+        <span>Tag de acesso</span>
+        <select id="customAccess">
+          <option value="Web">Web</option>
+          <option value="Desktop">Desktop</option>
+          <option value="Cloud/API">Cloud/API</option>
+          <option value="Experimental">Experimental</option>
+        </select>
+      </label>
+      <label class="custom-field">
+        <span>Plano / Status</span>
+        <select id="customPlan">
+          <option value="Grátis">Grátis</option>
+          <option value="Assinante">Assinante</option>
+          <option value="API">API</option>
+        </select>
+      </label>
+    </div>
+    <div id="customFeedback" class="tatico-feedback"></div>
+    <div class="modal-foot">
+      <button id="btnCancelarCustom" class="btn sec" type="button">Cancelar</button>
+      <button class="btn" type="submit">Salvar Ferramenta</button>
+    </div>
+  </form>
+</section>
+
+<section id="modalBackup" class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="backupTitulo" aria-hidden="true">
+  <div class="modal-handle" aria-hidden="true"></div>
+  <div class="modal-head">
+    <div class="modal-ic">💾</div>
+    <div class="modal-head-info">
+      <span class="modal-tag">BACKUP LOCAL (JSON)</span>
+      <h3 id="backupTitulo">Exportar & Importar Configurações</h3>
+    </div>
+    <button id="btnFecharBackupX" class="modal-x" type="button" aria-label="Fechar">×</button>
+  </div>
+  <div class="modal-body">
+    <p class="backup-desc">Salve um arquivo JSON com seus <strong>favoritos fixados</strong>, <strong>status de plano</strong> (Grátis / Assinante / API) e <strong>ferramentas personalizadas</strong> para restaurar em qualquer navegador ou dispositivo.</p>
+    <div id="backupResumo" class="compat-box mobile-ok"></div>
+    <div class="backup-acoes">
+      <button id="btnExportarJson" class="btn" type="button">⬇ Exportar Backup (.json)</button>
+      <label class="btn sec backup-upload">
+        ⬆ Importar Backup (.json)
+        <input id="inputImportarJson" type="file" accept=".json,application/json" hidden>
+      </label>
+    </div>
+    <div id="backupFeedback" class="tatico-feedback"></div>
+  </div>
+  <div class="modal-foot">
+    <button id="btnFecharBackup" class="btn sec" type="button">Fechar</button>
   </div>
 </section>
 
@@ -183,7 +315,6 @@
   </div>
 
   <div class="tatico-corpo">
-    <!-- ABA 1: CADERNINHO & ASSISTENTE -->
     <section id="tabCaderninho" class="tatico-painel" role="tabpanel">
       <div id="notasLista" class="notas-lista"></div>
 
@@ -210,7 +341,7 @@
 
         <div class="notas-acoes">
           <button id="btnDebaterIA" class="btn tatico-btn-full" type="button">✨ Debater & Compilar com IA</button>
-          <a id="btnCompilarGemini" class="btn tatico-btn-full" href="https://gemini.google.com/" rel="noopener noreferrer">⚡ Compilar & Abrir no Gemini</a>
+          <a id="btnCompilarGemini" class="btn tatico-btn-full" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">⚡ Compilar & Abrir no Gemini</a>
         </div>
 
         <div class="notas-limpar-wrap">
@@ -224,7 +355,6 @@
       </div>
     </section>
 
-    <!-- ABA 2: MONITOR DE COTAS & TOKENS -->
     <section id="tabCotas" class="tatico-painel" role="tabpanel" hidden>
       <div class="quota-field">
         <label for="quotaEcoSelect">Ecossistema monitorado</label>
@@ -292,7 +422,6 @@
       <button id="btnResetQuota" class="btn sec tatico-btn-full" type="button">Resetar Cota (Nova Sessão)</button>
     </section>
 
-    <!-- ABA 3: MANUAL TÁTICO -->
     <section id="tabManual" class="tatico-painel" role="tabpanel" hidden>
       <input id="manualBusca" class="manual-busca" type="search" placeholder="Buscar comando ou função (ex: /compact, flash, @workspace)...">
       <div id="manualFiltros" class="manual-filtros"></div>
